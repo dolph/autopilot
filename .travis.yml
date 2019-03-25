@@ -1,0 +1,15 @@
+language: python
+sudo: false
+dist: trusty
+python:
+- '2.7'
+cache: pip
+addons:
+  apt:
+    update: true
+    packages:
+    - chromium-chromedriver
+install:
+- pip install .
+script:
+- autopilot --help
