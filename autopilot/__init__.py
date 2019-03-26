@@ -1,9 +1,9 @@
 import argparse
+import imp
 import os
 import pdb
 
 from autopilot import browser
-from autopilot import robinhood
 
 
 def cli():
@@ -23,10 +23,10 @@ def cli():
         help='Stop to debug in the event of an exception.',
         action='store_true',
         default=os.getenv('BROWSER_DEBUG') == 'true')
-
-    # Add subparsers for individual commands
-    subparsers = parser.add_subparsers()
-    robinhood.add_subparser(subparsers)
+    parser.add_argument(
+        'module',
+        help='Path to the autopilot module where `start(browser)` should be '
+             'called.')
 
     args = parser.parse_args()
 
@@ -42,11 +42,15 @@ def cli():
         b = browser.Browser(
             fullscreen=args.fullscreen,
             headless=args.headless)
-        c = args.func(b, args)
-        c.start()
-    except Exception:
+        autopilot_module = imp.load_source('autopilot_module', args.module)
+        autopilot_module.start(b)
+    except SystemExit:
+        error = False
+        raise
+    except Exception as e:
         error = True
         if args.debug:
+            print(e)
             pdb.set_trace()
         raise
     finally:
