@@ -4,8 +4,13 @@
 Google Chrome, which implements some common human-behaviors so that your
 implementation doesn't have to. For example,
 
-* Waiting (impatiently) for elements to load on the screen
-* Refreshing the page when things don't load as expected
+* Waiting (impatiently) for elements to load on the screen,
+* Refreshing the page when things don't load as expected,
+* Typing input at a human pace, and
+* Reacting with a human reaction time when elements appear on screen.
+
+These behaviors provide fault tolerance and resilience when, for example,
+testing real web applications.
 
 ## Installation
 
