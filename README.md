@@ -14,9 +14,9 @@ implementation doesn't have to. For example,
 Reference the [`Dockerfile`](Dockerfile) for an example of how to setup the
 environment. In general, this project requires:
 
-* WebDriver for Chromium
-* Python 2.7 with `pip`
-* Selenium
+* WebDriver for Chromium (e.g. `apt-get install chromium-chromedriver`)
+* Python 2.7 with `pip` (e.g. `apt-get install python-pip`)
+* Selenium (e.g. `pip install selenium`)
 
 ## Using `pip`
 
