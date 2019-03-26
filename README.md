@@ -23,7 +23,7 @@ environment. In general, this project requires:
 * Python 2.7 with `pip` (e.g. `apt-get install python-pip`)
 * Selenium (e.g. `pip install selenium`)
 
-## Using `pip`
+### Using `pip`
 
 Distribution via PyPi is not yet available.
 
