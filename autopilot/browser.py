@@ -26,6 +26,7 @@ USER_AGENT = (
     'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) '
     'Chrome/69.0.3497.100 Safari/537.36')
 COOKIES_FILE = os.path.expanduser('~/.autopilot/cookies.pkl')
+VERBOSE = False
 
 # Wrap external objects so that we can access them from elsewhere within this
 # package.
@@ -67,7 +68,7 @@ def long_lag(x=None):
 
 
 class Browser(object):
-    def __init__(self, headless=False, fullscreen=False):
+    def __init__(self, headless=False, fullscreen=False, verbose=False):
         """Initialize a remotely controlled browser.
 
         If headless mode, the browser will not expect to be rendered onto a
@@ -78,6 +79,9 @@ class Browser(object):
         startup.
 
         """
+        global VERBOSE
+        VERBOSE = verbose
+
         if headless and fullscreen:
             raise Exception(
                 'Headless and fullscreen modes are not compatible.')
@@ -150,24 +154,28 @@ class Browser(object):
         return self.driver.current_url
 
     def quit(self):
-        print('QUIT')
+        if VERBOSE:
+            print('QUIT')
         self.driver.quit()
 
     def refresh(self, log=True):
-        if log:
+        if VERBOSE and log:
             print('REFRESH')
         self.driver.refresh()
 
     def switch_tab(self, index):
-        print('SWITCH tab %s' % index)
+        if VERBOSE:
+            print('SWITCH tab %s' % index)
         lag(self.driver.switch_to.window(self.driver.window_handles[index]))
 
     def close_tab(self):
-        print('CLOSE current tab')
+        if VERBOSE:
+            print('CLOSE current tab')
         self.driver.close()
 
     def get(self, url):
-        print('GET %s' % url)
+        if VERBOSE:
+            print('GET %s' % url)
         try:
             lag(self.driver.get(url))
         except TimeoutException:
@@ -201,7 +209,8 @@ class Browser(object):
 
     def find(self, xpath, visible=True, enabled=True,
              refresh=None, timeout=TIMEOUT):
-        print('FIND %s (timeout=%ds)' % (xpath, timeout))
+        if VERBOSE:
+            print('FIND %s (timeout=%ds)' % (xpath, timeout))
 
         started_at = time.time()
         refreshed_at = time.time()
@@ -214,7 +223,8 @@ class Browser(object):
 
             if time.time() - progressed_at > PROGRESS_INTERVAL:
                 progressed_at = time.time()
-                print('.', end='')
+                if VERBOSE:
+                    print('.', end='')
 
             if refresh and time.time() - refreshed_at > refresh:
                 self.refresh(log=refresh >= 15)
@@ -226,7 +236,7 @@ class Browser(object):
                 enabled=enabled)
 
             if elements:
-                if len(elements) > 1:
+                if VERBOSE and len(elements) > 1:
                     print('WARNING: Ignoring %d additional matching elements.'
                           % (len(elements) - 1))
 
@@ -238,7 +248,8 @@ class Browser(object):
     def present(self, xpath, refresh=None,
                 timeout=TIMEOUT):
         """Returns true when an element can be found."""
-        print('PRESENT %s (timeout=%ds)' % (xpath, timeout))
+        if VERBOSE:
+            print('PRESENT %s (timeout=%ds)' % (xpath, timeout))
 
         started_at = time.time()
         refreshed_at = time.time()
@@ -255,7 +266,8 @@ class Browser(object):
 
             if time.time() - progressed_at > PROGRESS_INTERVAL:
                 progressed_at = time.time()
-                print('.', end='')
+                if VERBOSE:
+                    print('.', end='')
 
             elements = self.finds(
                 xpath,
@@ -270,7 +282,8 @@ class Browser(object):
 
     def absent(self, xpath, refresh=None, timeout=TIMEOUT):
         """Returns true when an element cannot be found."""
-        print('ABSENT %s (timeout=%ds)' % (xpath, timeout))
+        if VERBOSE:
+            print('ABSENT %s (timeout=%ds)' % (xpath, timeout))
 
         started_at = time.time()
         refreshed_at = time.time()
@@ -283,7 +296,8 @@ class Browser(object):
 
             if time.time() - progressed_at > PROGRESS_INTERVAL:
                 progressed_at = time.time()
-                print('.', end='')
+                if VERBOSE:
+                    print('.', end='')
 
             if refresh and time.time() - refreshed_at > refresh:
                 self.refresh(log=refresh >= 15)
@@ -300,7 +314,7 @@ class Browser(object):
 
     def hover(self, xpath, refresh=None, timeout=TIMEOUT, click=False):
         """Scrolls to the element and hovers the mouse cursor over it."""
-        if not click:
+        if VERBOSE and not click:
             print('HOVER %s (timeout=%ds)' % (xpath, timeout))
         started_at = time.time()
         progressed_at = time.time()
@@ -312,7 +326,8 @@ class Browser(object):
 
             if time.time() - progressed_at > PROGRESS_INTERVAL:
                 progressed_at = time.time()
-                print('.', end='')
+                if VERBOSE:
+                    print('.', end='')
 
             try:
                 element = self.find(
@@ -336,15 +351,17 @@ class Browser(object):
 
     def click(self, xpath, refresh=None, timeout=TIMEOUT):
         """Simulate the mouse cursor finding and clicking a DOM element."""
-        print('CLICK %s (timeout=%ds)' % (xpath, timeout))
+        if VERBOSE:
+            print('CLICK %s (timeout=%ds)' % (xpath, timeout))
         return self.hover(xpath, refresh=refresh, timeout=timeout, click=True)
 
     def type(self, xpath, value, enter=False, refresh=None,
              timeout=TIMEOUT):
         element = self.find(xpath, refresh=refresh, timeout=timeout)
 
-        print("TYPE %s (timeout=%ds)" % (
-            element.get_attribute('outerHTML'), timeout))
+        if VERBOSE:
+            print("TYPE %s (timeout=%ds)" % (
+                element.get_attribute('outerHTML'), timeout))
 
         # Type into the element.
         for key in value:
@@ -367,5 +384,6 @@ class Browser(object):
         except TimeoutException:
             # Retry once, but the browser might just be gone
             self.driver.get_screenshot_as_file(path)
-        print('SCREENSHOT %s' % path)
+        if VERBOSE:
+            print('SCREENSHOT %s' % path)
         return path

@@ -24,6 +24,11 @@ def cli():
         action='store_true',
         default=os.getenv('BROWSER_DEBUG') == 'true')
     parser.add_argument(
+        '--verbose',
+        help='Verbose logging of state to stdout.',
+        action='store_true',
+        default=os.getenv('BROWSER_VERBOSE') == 'true')
+    parser.add_argument(
         'module',
         help='Path to the autopilot module where `start(browser)` should be '
              'called.')
@@ -41,7 +46,8 @@ def cli():
     try:
         b = browser.Browser(
             fullscreen=args.fullscreen,
-            headless=args.headless)
+            headless=args.headless,
+            verbose=args.verbose)
         autopilot_module = imp.load_source('autopilot_module', args.module)
         autopilot_module.start(b)
     except SystemExit:
@@ -50,7 +56,8 @@ def cli():
     except Exception as e:
         error = True
         if args.debug:
-            print(e)
+            if args.verbose:
+                print(e)
             pdb.set_trace()
         raise
     finally:
