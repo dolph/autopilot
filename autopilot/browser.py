@@ -168,7 +168,10 @@ class Browser(object):
 
     def get(self, url):
         print('GET %s' % url)
-        lag(self.driver.get(url))
+        try:
+            lag(self.driver.get(url))
+        except TimeoutException:
+            lag(self.driver.get(url))
 
     def finds(self, xpath, visible=True, enabled=True):
         """Returns zero to many matching DOM elements.
