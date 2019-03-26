@@ -336,7 +336,7 @@ class Browser(object):
 
     def click(self, xpath, refresh=None, timeout=TIMEOUT):
         """Simulate the mouse cursor finding and clicking a DOM element."""
-        print('CLICK %s %s (timeout=%ds)' % (xpath, timeout))
+        print('CLICK %s (timeout=%ds)' % (xpath, timeout))
         return self.hover(xpath, refresh=refresh, timeout=timeout, click=True)
 
     def type(self, xpath, value, enter=False, refresh=None,
