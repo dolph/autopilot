@@ -51,33 +51,32 @@ autopilot minimal_autopilot_module.py
 ### A real-world example
 
 This example navigates the UPS website to obtain tracking information given a
-particular tracking number. Note that we use `b` as our browser variable here,
-instead of the more verbose `browser` used above.
+particular tracking number.
 
 ```python
 import os
 
 
-def start(b):
+def start(browser):
     # Variables are passed in via the environment. For example:
     # $ TRACKING_NUMBER="1Z..." autopilot ups_tracking.py
     tracking_number = os.environ['TRACKING_NUMBER']
 
     # Load the UPS website
-    b.get('https://www.ups.com/')
+    browser.get('https://www.ups.com/')
 
     # Select the English / US option
-    b.click('//a[@data-code="en_us"]')
+    browser.click('//a[@data-code="en_us"]')
 
     # Type our tracking number into the tracking text input
-    b.type('//textarea[@id="ups-track--qs"]', tracking_number)
+    browser.type('//textarea[@id="ups-track--qs"]', tracking_number)
 
     # Click the Tracking submit button
-    b.click('//button[@id="ups-tracking-submit"]')
+    browser.click('//button[@id="ups-tracking-submit"]')
 
     # Find the package status and scheduled delivery date
-    print(b.find('//*[@id="stApp_txtPackageStatus"]').text)
-    print(b.find('//*[@id="stApp_scheduledDelivery"]').text)
+    print(browser.find('//*[@id="stApp_txtPackageStatus"]').text)
+    print(browser.find('//*[@id="stApp_scheduledDelivery"]').text)
 ```
 
 Note that `click()`, `type()`, and `find()` all accept
