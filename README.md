@@ -18,14 +18,14 @@ environment. In general, this project requires:
 
 * WebDriver for Chromium (e.g. `apt-get install chromium-chromedriver`)
 * Python 2.7 with `pip` (e.g. `apt-get install python-pip`)
-* Selenium (e.g. `pip install selenium`)
+* Selenium (e.g. `apt-get install python-selenium` or `pip install selenium`)
 
 ### Using `pip`
 
-Distribution via PyPi is not yet available.
+Distribution via PyPi is not yet available, but you can install the latest version directly from Github:
 
 ```bash
-pip install .
+pip install git+https://github.com/dolph/autopilot
 ```
 
 ## Usage
