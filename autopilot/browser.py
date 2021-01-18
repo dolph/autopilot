@@ -21,7 +21,7 @@ PROGRESS_INTERVAL = 60
 HUMAN_REACTION_TIME = 0.25  # seconds
 TIMEOUT = 60  # seconds
 PATH_TO_CHROMEDRIVER = os.environ.get(
-    'CHROMEDRIVER', '/usr/lib/chromium-browser/chromedriver')
+    'CHROMEDRIVER', '/usr/bin/chromedriver')
 USER_AGENT = (
     'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) '
     'Chrome/69.0.3497.100 Safari/537.36')
@@ -97,7 +97,7 @@ class Browser(object):
         resolution = (int(resolution[0]), int(resolution[1]))
 
         capabilities = dc.DesiredCapabilities.CHROME
-        capabilities['chrome.binary'] = '/opt/google/chrome/google-chrome'
+        capabilities['chrome.binary'] = '/usr/bin/chromium-browser'
         capabilities['loggingPrefs'] = {'browser': 'ALL'}
         capabilities['chromeOptions'] = {'args': [
             '--user-agent="%s"' % USER_AGENT,
